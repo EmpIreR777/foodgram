@@ -18,7 +18,7 @@ v1_router.register(r'recipes', RecipeViewSet, basename='recipes')
 urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    path('recipes/<str:short_code>/',
+    path('recipes/<str:short_code>/', 
         RecipeByShortCodeDetailView.as_view(), name='short_code'),
     path('', include(v1_router.urls)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),

@@ -156,8 +156,7 @@ class FavoriteRecipe(UserRecipeAbstract):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='favorite_recipes',
-                violation_error_message='Поля не уникальный.')
-                      ]
+                violation_error_message='Поля не уникальный.')]
 
     def __str__(self):
         return f'Рецепты пользователя: {self.user}'
