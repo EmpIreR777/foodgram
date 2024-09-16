@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
-from django.shortcuts import render
 from recipes.models import RecipeIngredient
 
 
@@ -26,7 +25,8 @@ def create_ingredients_list(request):
         amount = recipe_ingredient.amount
         if name not in [i.name for i in ingredient_info_list]:
             ingredient_info = IngredientInfo(
-                name=name, measurement_unit=measurement_unit, total_amount=amount)
+                name=name, measurement_unit=measurement_unit,
+                total_amount=amount)
             ingredient_info_list.append(ingredient_info)
             continue
         for ingredient_info in ingredient_info_list:
@@ -38,7 +38,8 @@ def create_ingredients_list(request):
 
 def create_pdf(final_list, filename):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response['Content-Disposition'] = f'attachment; filename="{
+        filename}"'
     p = canvas.Canvas(response, pagesize=letter)
     p.setFont('Arial', 15)
     width, height = letter
@@ -49,7 +50,8 @@ def create_pdf(final_list, filename):
         name = ingredient_info.name.capitalize()
         measurement_unit = ingredient_info.measurement_unit
         total_amount = ingredient_info.total_amount
-        p.drawString(30, y, f'{name} ({measurement_unit}): {total_amount}')
+        p.drawString(30, y, f'{name} ({measurement_unit}): {
+            total_amount}')
         y -= 20
     p.showPage()
     p.save()

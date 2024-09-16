@@ -164,7 +164,8 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
 
         RecipeIngredient.objects.bulk_create(
             RecipeIngredient(recipe=recipe,
-                             ingredient=ingredient['id'], amount=ingredient['amount'])
+                             ingredient=ingredient['id'],
+                             amount=ingredient['amount'])
             for ingredient in ingredients
         )
         return recipe
@@ -178,7 +179,8 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             instance.ingredients.clear()
             RecipeIngredient.objects.bulk_create(
                 RecipeIngredient(recipe=instance,
-                                 ingredient=ingredient['id'], amount=ingredient['amount'])
+                                 ingredient=ingredient['id'],
+                                 amount=ingredient['amount'])
                 for ingredient in ingredients
             )
         return super().update(instance, validated_data)

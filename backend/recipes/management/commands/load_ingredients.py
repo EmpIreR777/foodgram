@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Загрузка CSV файлов.'
 
     def handle(self, *args, **kwargs):
-        file_path = os.path.join/'data', 'ingredients.csv')
+        file_path = (os.path.join/'data', 'ingredients.csv')
         with open(file_path, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:

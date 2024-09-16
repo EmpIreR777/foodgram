@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -12,7 +13,9 @@ from djoser.views import UserViewSet
 
 from .filrets import RecipeFilter
 from users.models import User
-from recipes.models import Tag, Ingredient, Recipe, FavoriteRecipe, ShoppingCart
+from recipes.models import (
+    Tag, Ingredient, Recipe,
+    FavoriteRecipe, ShoppingCart)
 from .permissions import IsStaffOrIsAuthorOrReadOnly
 from .pagination import PagePagination
 from .serializers import (
@@ -31,7 +34,7 @@ from .pdf import create_ingredients_list, create_pdf
 
 
 class RecipeViewSet(ModelViewSet):
-    """Вьюсет рецептов favorit/ shopping_cart/ download_shopping_cart/ get_link/"""
+    """Вьюсет рецептов favorit/ shopping_cart/ download_shopping_cart/"""
 
     permission_classes = (IsStaffOrIsAuthorOrReadOnly,)
     serializer_class = RecipeReadSerializer
@@ -52,7 +55,8 @@ class RecipeViewSet(ModelViewSet):
     @staticmethod
     def add_method(serializer, request, pk):
         serializer = serializer(data={
-            'user': request.user.id, 'recipe': pk}, context={'request': request})
+            'user': request.user.id, 'recipe': pk},
+                                context={'request': request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -129,7 +133,8 @@ class UserViewSet(UserViewSet):
     def subscribe(self, request, id):
         user = request.user
         serializer = SubscribeSerializer(
-            data={'user': user.id, 'following': id}, context={'request': request})
+            data={'user': user.id, 'following': id},
+            context={'request': request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -147,8 +152,8 @@ class UserViewSet(UserViewSet):
     @action(detail=False, methods=('get',),
             permission_classes=(IsAuthenticated,))
     def subscriptions(self, request):
-        queryset = User.objects.filter(following__user=self.request.user)
-        print(f'!!!!!!!', queryset)
+        queryset = User.objects.filter(
+            following__user=self.request.user)
         pag = self.paginate_queryset(queryset)
         serializer = SubscriptionsSerializer(
             pag, context={'request': request}, many=True)

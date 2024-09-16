@@ -34,7 +34,9 @@ class Recipe(models.Model):
         'Описание рецепта',
     )
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления', validators=[MinValueValidator(1, message='Минимальное значение 1')]
+        'Время приготовления', validators=[
+            MinValueValidator(
+                1, message='Минимальное значение 1')]
     )
 
     pub_date = models.DateTimeField(
@@ -86,7 +88,7 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """Модель тэгов."""
-    
+
     name = models.CharField(
         'Тэги', max_length=32,
         help_text='Имя тега'
@@ -120,7 +122,8 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'Количество', default=1,
-        validators=[MinValueValidator(1, message='Минимальное значение 1')]
+        validators=[MinValueValidator(
+            1, message='Минимальное значение 1')]
     )
 
     class Meta:
@@ -154,9 +157,9 @@ class FavoriteRecipe(UserRecipeAbstract):
         verbose_name_plural = 'Избранные рецепты'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='favorite_recipes', violation_error_message='Поля не уникальный.'
-            ),
-        ]
+                fields=['user', 'recipe'], name='favorite_recipes',
+                violation_error_message='Поля не уникальный.'
+            ),]
     def __str__(self):
         return f'Рецепты пользователя: {self.user}'
 
