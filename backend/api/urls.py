@@ -1,7 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import (
-    SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView)
+                                    SpectacularAPIView,
+                                    SpectacularRedocView,
+                                    SpectacularSwaggerView)
 
 from .views import (UserViewSet, TagViewSet,
                     RecipeViewSet, IngredientViewSet,
