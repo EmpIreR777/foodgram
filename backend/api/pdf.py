@@ -14,10 +14,9 @@ class IngredientInfo:
 
 
 def create_ingredients_list(request):
-    ingredients = (
-        RecipeIngredient.objects.filter(
-            recipe__shopping_carts__user=request.user)
-        .select_related('ingredient')
+    ingredients = RecipeIngredient.objects.filter(
+        recipe__shopping_carts__user=request.user).select_related(
+        'ingredient'
     )
     ingredient_info_list = []
     print(ingredients)
@@ -43,7 +42,7 @@ def create_pdf(final_list, filename):
     p = canvas.Canvas(response, pagesize=letter)
     p.setFont('Arial', 15)
     width, height = letter
-    y = height - 40 
+    y = height - 40
     p.drawString(30, y, 'Ingredients List')
     y -= 20
     for ingredient_info in final_list:

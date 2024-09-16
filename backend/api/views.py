@@ -25,13 +25,13 @@ from .serializers import (
     FavoriteRecipeSerializer,
     ShoppingCartSerializer,
     SubscriptionsSerializer,
-    SubscribeSerializer
+    SubscribeSerializer,
 )
 from .pdf import create_ingredients_list, create_pdf
 
 
 class RecipeViewSet(ModelViewSet):
-    """Вьюсет рецептов urls = favorit/ shopping_cart/ download_shopping_cart/ get_link/"""
+    """Вьюсет рецептов favorit/ shopping_cart/ download_shopping_cart/ get_link/"""
 
     permission_classes = (IsStaffOrIsAuthorOrReadOnly,)
     serializer_class = RecipeReadSerializer
@@ -41,9 +41,8 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = RecipeFilter
 
     def get_queryset(self):
-        return Recipe.objects.select_related('author').prefetch_related(
-            'ingredients', 'tags'
-        )
+        return Recipe.objects.select_related(
+            'author').prefetch_related('ingredients', 'tags')
 
     def get_serializer_class(self, *args, **kwargs):
         if self.action in ('list', 'retrieve'):
@@ -52,9 +51,8 @@ class RecipeViewSet(ModelViewSet):
 
     @staticmethod
     def add_method(serializer, request, pk):
-        serializer = serializer(data={'user': request.user.id,
-                                      'recipe': pk},
-                                context={'request': request})
+        serializer = serializer(data={
+            'user': request.user.id, 'recipe': pk}, context={'request': request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -63,14 +61,11 @@ class RecipeViewSet(ModelViewSet):
     @staticmethod
     def delete_method(model, request, pk):
         del_item, item = model.objects.filter(
-            user = request.user,
-            recipe = pk
-        ).delete()
+            user=request.user, recipe=pk).delete()
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
-                'Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST
-            )
+            'Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=('get',), url_path='get-link')
     def get_link(self, request, pk):
@@ -96,11 +91,8 @@ class RecipeViewSet(ModelViewSet):
     def delete_shopping_cart(self, request, pk):
         return self.delete_method(ShoppingCart, request, pk)
 
-    @action(
-        methods=('get',),
-        detail=False,
-        permission_classes=(IsAuthenticated,)
-    )
+    @action(methods=('get',), detail=False,
+            permission_classes=(IsAuthenticated,))
     def download_shopping_cart(self, request):
         final_list = create_ingredients_list(request)
         pdf_response = create_pdf(final_list, "ingredients_list.pdf")
@@ -119,7 +111,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет тэгов."""
-    
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -132,12 +124,12 @@ class UserViewSet(UserViewSet):
     serializer_class = UserSerializer
     pagination_class = PagePagination
 
-    @action(detail=True, methods=['post'], permission_classes=(IsAuthenticated,))
+    @action(detail=True, methods=['post'],
+            permission_classes=(IsAuthenticated,))
     def subscribe(self, request, id):
         user = request.user
-        serializer = SubscribeSerializer(data={
-            'user': user.id, 'following': id},
-                                         context={'request': request})
+        serializer = SubscribeSerializer(
+            data={'user': user.id, 'following': id}, context={'request': request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -145,38 +137,44 @@ class UserViewSet(UserViewSet):
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, id):
-        del_item, item = (request.user
-            .follower.filter(following=id)
-            .delete())
+        del_item, item = request.user.follower.filter(
+            following=id).delete()
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response('Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Нет в добавленных.',
+                        status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=('get',), permission_classes=(IsAuthenticated,))
+    @action(detail=False, methods=('get',),
+            permission_classes=(IsAuthenticated,))
     def subscriptions(self, request):
         queryset = User.objects.filter(following__user=self.request.user)
         print(f'!!!!!!!', queryset)
         pag = self.paginate_queryset(queryset)
-        serializer = SubscriptionsSerializer(pag, context={
-            'request': request}, many=True)
+        serializer = SubscriptionsSerializer(
+            pag, context={'request': request}, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @action(detail=False, methods=('put',), url_path='me/avatar', permission_classes=(IsAuthenticated,))
+    @action(detail=False, methods=('put',), url_path='me/avatar',
+            permission_classes=(IsAuthenticated,))
     def update_avatar(self, request):
         serializer = AvatarSerializer(request.user, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data,
+                            status=status.HTTP_200_OK)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
     @update_avatar.mapping.delete
     def delete_avatar(self, request):
-        serializer = AvatarSerializer(request.user, data={'avatar': None},
-                                      partial=True)
+        serializer = AvatarSerializer(
+            request.user, data={'avatar': None}, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data,
+                            status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=('get',),
             permission_classes=(IsAuthenticated,))

@@ -3,12 +3,14 @@ from rest_framework.validators import UniqueTogetherValidator
 from drf_extra_fields.fields import Base64ImageField
 
 from users.models import User, Follow
-from recipes.models import (Recipe, Tag,
-                            RecipeIngredient,
-                            Ingredient,
-                            FavoriteRecipe,
-                            ShoppingCart,
-                            )
+from recipes.models import (
+    Recipe,
+    Tag,
+    RecipeIngredient,
+    Ingredient,
+    FavoriteRecipe,
+    ShoppingCart,
+)
 
 
 class AvatarSerializer(serializers.ModelSerializer):
@@ -22,9 +24,7 @@ class AvatarSerializer(serializers.ModelSerializer):
 
     def validate_avatar(self, value):
         if value and not value.endswith('jpg', 'png'):
-            raise serializers.ValidationError(
-                'Допустимые форматы: jpg, png'
-            )
+            raise serializers.ValidationError('Допустимые форматы: jpg, png')
         return value
 
 
@@ -65,15 +65,18 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('id', 'name', 'measurement_unit',)
+        fields = (
+            'id',
+            'name',
+            'measurement_unit',
+        )
 
 
 class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
     """Серилизатор добавления ингредиентов."""
 
     id = serializers.PrimaryKeyRelatedField(
-        queryset=Ingredient.objects.all(), required=True
-    )
+        queryset=Ingredient.objects.all(), required=True)
     amount = serializers.IntegerField(min_value=1)
 
     class Meta:
@@ -99,17 +102,27 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True)
     author = UserSerializer(read_only=True)
-    ingredients = RecipeIngredientSerializer(many=True,
-                                             source='recipe_ingredient_set')
-    is_favorited = serializers.SerializerMethodField(read_only=True)
-    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+    ingredients = RecipeIngredientSerializer(
+        many=True, source='recipe_ingredient_set')
+    is_favorited = serializers.SerializerMethodField(
+        read_only=True)
+    is_in_shopping_cart = serializers.SerializerMethodField(
+        read_only=True)
     image = Base64ImageField(required=True)
 
     class Meta:
         model = Recipe
         fields = (
-            'id', 'tags', 'author', 'ingredients', 'is_favorited',
-            'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time',
+            'id',
+            'tags',
+            'author',
+            'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
+            'name',
+            'image',
+            'text',
+            'cooking_time',
         )
 
     def get_is_favorited(self, obj):
@@ -128,11 +141,12 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     """Серилизатор добавления рецептов."""
 
-    tags = serializers.PrimaryKeyRelatedField(many=True,
-                                              queryset = Tag.objects.all())
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Tag.objects.all())
     author = UserSerializer(read_only=True)
-    ingredients = IngredientCreateUpdateSerializer(many=True,
-                                                   )
+    ingredients = IngredientCreateUpdateSerializer(
+        many=True,
+    )
     image = Base64ImageField(required=True)
 
     class Meta:
@@ -144,12 +158,13 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(author=self.context['request'].user, **validated_data)
+        recipe = Recipe.objects.create(
+            author=self.context['request'].user, **validated_data)
         recipe.tags.set(tags)
 
         RecipeIngredient.objects.bulk_create(
-            RecipeIngredient(recipe=recipe, ingredient=ingredient['id'],
-                             amount=ingredient['amount'])
+            RecipeIngredient(recipe=recipe,
+                             ingredient=ingredient['id'], amount=ingredient['amount'])
             for ingredient in ingredients
         )
         return recipe
@@ -162,8 +177,8 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         if ingredients is not None:
             instance.ingredients.clear()
             RecipeIngredient.objects.bulk_create(
-                RecipeIngredient(recipe=instance, ingredient=ingredient['id'],
-                                amount=ingredient['amount'])
+                RecipeIngredient(recipe=instance,
+                                 ingredient=ingredient['id'], amount=ingredient['amount'])
                 for ingredient in ingredients
             )
         return super().update(instance, validated_data)

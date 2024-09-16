@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Tag, Ingredient, Recipe,
+from .models import (Tag, Ingredient, Recipe, 
                      FavoriteRecipe, ShoppingCart, RecipeIngredient)
 
 
@@ -28,7 +28,7 @@ class TagAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit')
     list_filter = ('name', 'measurement_unit')
-    search_fields =('slug',)
+    search_fields = ('slug',)
 
 
 @admin.register(Recipe)
@@ -36,7 +36,9 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'image', 'url_link')
     list_display_links = ('id', 'name', 'author')
     list_filter = (
-        'author', 'name', 'tags',
+        'author',
+        'name',
+        'tags',
     )
     ordering = ('author',)
     raw_id_fields = ('author', 'tags', 'ingredients')

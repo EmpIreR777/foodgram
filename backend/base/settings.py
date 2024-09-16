@@ -6,7 +6,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-pdfmetrics.registerFont(TTFont('Arial', BASE_DIR / 'fonts'/'arialmt.ttf'))
+pdfmetrics.registerFont(TTFont('Arial', BASE_DIR / 'fonts' / 'arialmt.ttf'))
 
 SECRET_KEY = 'django-insecure-b&_^9-kl+e%+vamuv2*8^_1=y2+ec8ywja1^3%l&18_ed$9&$7'
 
@@ -25,9 +25,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
     'api.apps.ApiConfig',
+    
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
@@ -111,7 +113,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-       'user': 'api.serializers.UserSerializer',
+        'user': 'api.serializers.UserSerializer',
         'current_user': 'api.serializers.UserSerializer',
     },
     'PERMISSIONS': {

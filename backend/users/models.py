@@ -7,26 +7,19 @@ class User(AbstractUser):
 
     email = models.EmailField(
         'E-mail', max_length=254,
-        unique=True,
-        help_text='Введите email пользователя'
-    )
+        unique=True, help_text='Введите email пользователя')
     username = models.CharField(
         'Логин', max_length=150,
-        unique=True,
-        help_text='Введите логин поьзователя'
-    )
+        unique=True, help_text='Введите логин поьзователя')
     first_name = models.CharField(
         'Имя', max_length=150,
-        help_text='Введите имя пользователя'
-    )
+        help_text='Введите имя пользователя')
     last_name = models.CharField(
         'Фамилия', max_length=150,
-        help_text='Введите фамилию пользователя'
-    )
+        help_text='Введите фамилию пользователя')
     avatar = models.ImageField(
         'Аватар', upload_to='media/avatar',
-        null=True, blank=True, default=None
-    )
+        null=True, blank=True, default=None)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name', 'password')
@@ -42,7 +35,7 @@ class User(AbstractUser):
 
 class Follow(models.Model):
     """Модель подписок."""
-    
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -59,7 +52,8 @@ class Follow(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'following'], name='unique_user', violation_error_message='Уже подписан.'
+                fields=['user', 'following'], name='unique_user',
+                violation_error_message='Уже подписан.'
             ),
             models.CheckConstraint(
                 check=~models.Q(user=models.F('following')),
