@@ -38,8 +38,8 @@ def create_ingredients_list(request):
 
 def create_pdf(final_list, filename):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{
-        filename}"'
+    response[
+        'Content-Disposition'] = f'attachment; filename="{filename}"'
     p = canvas.Canvas(response, pagesize=letter)
     p.setFont('Arial', 15)
     width, height = letter
@@ -50,8 +50,7 @@ def create_pdf(final_list, filename):
         name = ingredient_info.name.capitalize()
         measurement_unit = ingredient_info.measurement_unit
         total_amount = ingredient_info.total_amount
-        p.drawString(30, y, f'{name} ({measurement_unit}): {
-            total_amount}')
+        p.drawString(30, y, f'{name} ({measurement_unit}): {total_amount}')
         y -= 20
     p.showPage()
     p.save()

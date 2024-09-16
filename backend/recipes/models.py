@@ -38,7 +38,6 @@ class Recipe(models.Model):
             MinValueValidator(
                 1, message='Минимальное значение 1')]
     )
-
     pub_date = models.DateTimeField(
         verbose_name="Дата публикации",
         auto_now_add=True,
@@ -160,6 +159,7 @@ class FavoriteRecipe(UserRecipeAbstract):
                 fields=['user', 'recipe'], name='favorite_recipes',
                 violation_error_message='Поля не уникальный.'
             ),]
+
     def __str__(self):
         return f'Рецепты пользователя: {self.user}'
 
