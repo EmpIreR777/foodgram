@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         file_path = os.path.join('data', 'ingredients.csv')
         with open(file_path, mode='r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
+            reader = csv.reader(file)
             for read in reader:
                 Ingredient.objects.create(
                     name=read[0],

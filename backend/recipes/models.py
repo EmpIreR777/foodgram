@@ -50,8 +50,7 @@ class Recipe(models.Model):
         if not self.url_link:
             while True:
                 self.url_link = get_random_string(length=8)
-                if not Recipe.objects.filter(
-                    url_link=self.url_link).exists():
+                if not Recipe.objects.filter(url_link=self.url_link).exists():
                     break
         super().save(*args, **kwargs)
 
@@ -158,7 +157,7 @@ class FavoriteRecipe(UserRecipeAbstract):
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='favorite_recipes',
                 violation_error_message='Поля не уникальный.')
-            ]
+                      ]
 
     def __str__(self):
         return f'Рецепты пользователя: {self.user}'
