@@ -5,8 +5,8 @@ from drf_spectacular.views import (SpectacularAPIView,
                                    SpectacularSwaggerView)
 
 from .views import (UserViewSet, TagViewSet,
-                    RecipeViewSet, IngredientViewSet,
-                    RecipeByShortCodeDetailView)
+                    RecipeViewSet, IngredientViewSet,)
+                    # RecipeByShortCodeDetailView)
 
 v1_router = DefaultRouter()
 
