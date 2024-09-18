@@ -231,6 +231,7 @@ class SubscriptionsSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         fields = (
+            'id',
             'email',
             'username',
             'first_name',
@@ -300,16 +301,9 @@ class ShoppingCartSerializer(BaseRecipeSerializer):
             UniqueTogetherValidator(
                 queryset=ShoppingCart.objects.all(),
                 fields=['user', 'recipe'],
-                message='Вы уже подписаны на этого автора!',
+                message='Вы уже добавили рецепт в корзину!',
             )
         ]
-
-    # def create(self, validated_data):
-    #     user = validated_data['user']
-    #     recipe = validated_data['recipe']
-    #     if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
-    #     raise serializers.ValidationError('Recipe already in shopping cart.')
-    #     return ShoppingCart.objects.create(user=user, recipe=recipe)
 
 
 class FavoriteRecipeSerializer(BaseRecipeSerializer):

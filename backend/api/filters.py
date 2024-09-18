@@ -13,9 +13,9 @@ class IngredientSearchFilter(SearchFilter):
 
 
 class RecipeFilter(FilterSet):
-    is_favorited = filters.NumberFilter(
+    is_favorited = filters.BooleanFilter(
         method='get_favorite_recipes')
-    is_in_shopping_cart = filters.NumberFilter(
+    is_in_shopping_cart = filters.BooleanFilter(
         method='get_is_in_shopping_cart')
     tags = filters.AllValuesMultipleFilter(
         field_name='tags__slug')

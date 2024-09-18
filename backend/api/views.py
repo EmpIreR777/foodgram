@@ -57,8 +57,8 @@ class RecipeViewSet(ModelViewSet):
                 'request': request})
         if not Recipe.objects.filter(id=pk).exists():
             return Response(data={
-                'Вы пытаетесь добавить несуществующий рецепт'},
-                status=status.HTTP_404_NOT_FOUND)
+                'error': 'Вы пытаетесь добавить несуществующий рецепт'},
+                status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -70,8 +70,7 @@ class RecipeViewSet(ModelViewSet):
             user=request.user, recipe=pk).delete()
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            'Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=('get',), url_path='get-link')
     def get_link(self, request, pk):
@@ -91,7 +90,6 @@ class RecipeViewSet(ModelViewSet):
     @action(detail=True, methods=('post',),
             permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request, pk):
-
         return self.add_method(ShoppingCartSerializer, request, pk)
 
     @shopping_cart.mapping.delete
@@ -158,7 +156,7 @@ class UserViewSet(CustomUser):
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response('Нет в добавленных.',
-                        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, methods=('get',),
             permission_classes=(IsAuthenticated,))
@@ -183,14 +181,9 @@ class UserViewSet(CustomUser):
 
     @update_avatar.mapping.delete
     def delete_avatar(self, request):
-        serializer = AvatarSerializer(
-            request.user, data={'avatar': None}, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data,
-                            status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
+        request.user.avatar.delete()
+        request.user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=('get',),
             permission_classes=(IsAuthenticated,))
