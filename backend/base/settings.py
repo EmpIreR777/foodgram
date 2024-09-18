@@ -150,7 +150,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-
 SPECTACULAR_SETTINGS = {
     "TITLE": "FOODGRAM API Project",
     "DESCRIPTION": "A sample Foodgram to learn about a food",
