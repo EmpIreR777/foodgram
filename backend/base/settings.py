@@ -156,3 +156,5 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "A sample Foodgram to learn about a food",
     "VERSION": "1.0.0",
 }
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
