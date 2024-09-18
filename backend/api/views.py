@@ -11,7 +11,7 @@ from rest_framework import filters as drf_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 
-from .filrets import RecipeFilter
+from .filters import RecipeFilter, IngredientSearchFilter
 from users.models import User
 from recipes.models import (
     Tag, Ingredient, Recipe,
@@ -37,7 +37,6 @@ class RecipeViewSet(ModelViewSet):
     """Вьюсет рецептов favorit/ shopping_cart/ download_shopping_cart/"""
 
     permission_classes = (IsStaffOrIsAuthorOrReadOnly,)
-    serializer_class = RecipeReadSerializer
     http_method_names = ('get', 'post', 'patch', 'delete')
     pagination_class = PagePagination
     filter_backends = (DjangoFilterBackend,)
@@ -57,6 +56,10 @@ class RecipeViewSet(ModelViewSet):
         serializer = serializer(data={
             'user': request.user.id, 'recipe': pk}, context={
                 'request': request})
+        if not Recipe.objects.filter(id=pk).exists():
+            return Response(data={
+                'Вы пытаетесь добавить несуществующий рецепт'},
+                            status=status.HTTP_404_NOT_FOUND)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -86,9 +89,9 @@ class RecipeViewSet(ModelViewSet):
     def delete_favorite(self, request, pk):
         return self.delete_method(FavoriteRecipe, request, pk)
 
-    @action(detail=True, methods=('post',),
-            permission_classes=(IsAuthenticated,))
+    @action(detail=True, methods=('post',), permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request, pk):
+
         return self.add_method(ShoppingCartSerializer, request, pk)
 
     @shopping_cart.mapping.delete
@@ -108,8 +111,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    filter_backends = (drf_filters.SearchFilter,)
+    filter_backends = (IngredientSearchFilter,)
     search_fields = ('^name',)
 
 
@@ -133,8 +135,17 @@ class UserViewSet(UserViewSet):
     def subscribe(self, request, id):
         user = request.user
         serializer = SubscribeSerializer(
-            data={'user': user.id, 'following': id},
+            data={
+                'user': user.id,
+                'following': id},
             context={'request': request})
+        if not User.objects.filter(id=self.kwargs['id']).exists():
+            return Response(
+                data={
+                    'Вы пытаетесь подписатсья на несуществующего юзера',
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .validators import username_validator
+
 
 class User(AbstractUser):
     """Модель пользователя."""
@@ -10,7 +12,9 @@ class User(AbstractUser):
         unique=True, help_text='Введите email пользователя')
     username = models.CharField(
         'Логин', max_length=150,
-        unique=True, help_text='Введите логин поьзователя')
+        unique=True, 
+        validators=[username_validator],
+        help_text='Введите логин поьзователя')
     first_name = models.CharField(
         'Имя', max_length=150,
         help_text='Введите имя пользователя')
