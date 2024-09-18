@@ -12,7 +12,7 @@ class User(AbstractUser):
         unique=True, help_text='Введите email пользователя')
     username = models.CharField(
         'Логин', max_length=150,
-        unique=True, 
+        unique=True,
         validators=[username_validator],
         help_text='Введите логин поьзователя')
     first_name = models.CharField(

@@ -56,7 +56,7 @@ class TagSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'slug'
-            )
+        )
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -307,10 +307,8 @@ class ShoppingCartSerializer(BaseRecipeSerializer):
     # def create(self, validated_data):
     #     user = validated_data['user']
     #     recipe = validated_data['recipe']
-
     #     if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
-    #         raise serializers.ValidationError('Recipe already in shopping cart.')
-
+    #     raise serializers.ValidationError('Recipe already in shopping cart.')
     #     return ShoppingCart.objects.create(user=user, recipe=recipe)
 
 

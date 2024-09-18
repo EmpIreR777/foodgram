@@ -7,7 +7,6 @@ from rest_framework.permissions import (IsAuthenticated,
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework import filters as drf_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 
@@ -59,7 +58,7 @@ class RecipeViewSet(ModelViewSet):
         if not Recipe.objects.filter(id=pk).exists():
             return Response(data={
                 'Вы пытаетесь добавить несуществующий рецепт'},
-                            status=status.HTTP_404_NOT_FOUND)
+                status=status.HTTP_404_NOT_FOUND)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -89,7 +88,8 @@ class RecipeViewSet(ModelViewSet):
     def delete_favorite(self, request, pk):
         return self.delete_method(FavoriteRecipe, request, pk)
 
-    @action(detail=True, methods=('post',), permission_classes=(IsAuthenticated,))
+    @action(detail=True, methods=('post',),
+            permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request, pk):
 
         return self.add_method(ShoppingCartSerializer, request, pk)
