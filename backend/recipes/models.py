@@ -46,14 +46,6 @@ class Recipe(models.Model):
 
     url_link = models.CharField(max_length=128, unique=True)
 
-    def save(self, *args, **kwargs):
-        if not self.url_link:
-            while True:
-                self.url_link = get_random_string(length=8)
-                if not Recipe.objects.filter(url_link=self.url_link).exists():
-                    break
-        super().save(*args, **kwargs)
-
     class Meta:
         ordering = ('-pub_date', 'id')
         verbose_name = 'Рецепт'
@@ -61,6 +53,14 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.url_link:
+            while True:
+                self.url_link = get_random_string(length=8)
+                if not Recipe.objects.filter(url_link=self.url_link).exists():
+                    break
+        super().save(*args, **kwargs)
 
 
 class Ingredient(models.Model):
@@ -79,6 +79,13 @@ class Ingredient(models.Model):
         ordering = ('name', 'id')
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='ingredient_measurement_unit',
+                violation_error_message='Поля не уникальный.',
+            )
+        ]
 
     def __str__(self):
         return self.name

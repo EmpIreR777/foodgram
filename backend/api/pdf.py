@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+
 from recipes.models import RecipeIngredient
 
 

@@ -1,20 +1,23 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv, find_dotenv
+
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+
+load_dotenv(find_dotenv())
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 pdfmetrics.registerFont(TTFont('Arial', BASE_DIR / 'fonts' / 'arialmt.ttf'))
 
-SECRET_KEY = 'django-insecure-b&_^9-kl+e%+vamuv2*8^_1=y2+ec8ywja1^3%l&18_ed$9&$7'
+SECRET_KEY = os.getenv('SECRET_KEY', 'abcd')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = ['89.169.167.235', '127.0.0.1',
-                 'localhost', 'foodgram-best.zapto.org']
+ALLOWED_HOSTS = os.getenv('HOSTS', '').split()
 
 
 AUTH_USER_MODEL = 'users.User'

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as CustomUser
 
 from .filters import RecipeFilter, IngredientSearchFilter
 from users.models import User
@@ -123,7 +123,7 @@ class TagViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-class UserViewSet(UserViewSet):
+class UserViewSet(CustomUser):
     """Вьюсет юзера urls = user/ me/ sub/ me/avatar/."""
 
     queryset = User.objects.all()
