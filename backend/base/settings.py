@@ -13,11 +13,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 pdfmetrics.registerFont(TTFont('Arial', BASE_DIR / 'fonts' / 'arialmt.ttf'))
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'abcd')
+SECRET_KEY = os.getenv("SECRET_KEY", "abcd")
 
-DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
-ALLOWED_HOSTS = os.getenv('HOSTS', '').split()
+ALLOWED_HOSTS = os.getenv("HOSTS", "").split()
 
 
 AUTH_USER_MODEL = 'users.User'
