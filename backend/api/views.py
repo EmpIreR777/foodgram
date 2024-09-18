@@ -70,7 +70,8 @@ class RecipeViewSet(ModelViewSet):
             user=request.user, recipe=pk).delete()
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response('Нет в добавленных.', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Нет в добавленных.',
+                        status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=('get',), url_path='get-link')
     def get_link(self, request, pk):
