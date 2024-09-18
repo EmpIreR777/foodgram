@@ -127,7 +127,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: empirer777/foodgram-front:latest 
+          tags: empirer/foodgram-frontend:latest 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
