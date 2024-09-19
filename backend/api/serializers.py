@@ -194,7 +194,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        image = validated_data.pop('image', None) 
+        image = validated_data.pop('image', None)
         if image is not None:
             instance.image = image
         tags = validated_data.pop('tags', None)
