@@ -9,7 +9,8 @@ from .views import (
     UserViewSet,
     TagViewSet,
     RecipeViewSet,
-    IngredientViewSet)
+    IngredientViewSet,
+    RecipeByShortCodeDetailView)
 
 
 v1_router = DefaultRouter()
@@ -27,8 +28,8 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(v1_router.urls)),
-    # path('recipes/s/<str:short_code>/',
-    #      RecipeByShortCodeDetailView.as_view(), name='short_code'),
+    path('recipes/s/<str:short_code>/',
+         RecipeByShortCodeDetailView.as_view(), name='short_code'),
     path("schema/", SpectacularAPIView.as_view(),
          name="schema"),
     path("schema/redoc/", SpectacularRedocView.as_view(

@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as CustomUser
@@ -81,7 +82,7 @@ class RecipeViewSet(ModelViewSet):
     @action(detail=True, methods=('get',), url_path='get-link')
     def get_link(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
-        url_link = f'https://foodgram-best.zapto.org/{recipe.url_link}'
+        url_link = f'https://foodgram-best.zapto.org/recipes/s/{recipe.url_link}'
         return JsonResponse({'short-link': url_link})
 
     @action(detail=True, methods=('post',),
@@ -208,13 +209,10 @@ class UserViewSet(CustomUser):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# class RecipeByShortCodeDetailView(RetrieveAPIView):
-#     """Вьюсет обработки короткой ссылки."""
+class RecipeByShortCodeDetailView(RetrieveAPIView):
+    """Вьюсет обработки короткой ссылки."""
 
-#     queryset = Recipe.objects.all()
-#     serializer_class = RecipeReadSerializer
-#     lookup_field = 'url_link'
-#     lookup_url_kwarg = 'short_code'
-
-#     def get_queryset(self):
-#         return Recipe.objects.get(url_link=self.kwargs['short_code'])
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeReadSerializer
+    lookup_field = 'url_link'
+    lookup_url_kwarg = 'short_code'
