@@ -157,24 +157,24 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         tags = attrs.get('tags')
         ingredients = attrs.get('ingredients')
-        image = attrs.get('image')
+        # image = attrs.get('image')
 
         if not ingredients:
             raise serializers.ValidationError(
-                'Поле отсутствует')
+                {'ingredient': 'Поле отсутствует'})
         if not tags:
             raise serializers.ValidationError(
-                'Поле отсуствует')
+                {'tags': 'Поле отсуствует'})
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
-                'Теги не уникальны')
+                {'tags:': 'Теги не уникальны'})
         double_ingredient = {item['id'] for item in ingredients}
         if len(double_ingredient) != len(ingredients):
             raise serializers.ValidationError(
-                'Дублирование ингредиентов')
-        if not image:
-            raise serializers.ValidationError(
-                'Обязательное поле')
+                {'ingredient': 'Дублирование ингредиентов'})
+        # if not image:
+        #     raise serializers.ValidationError(
+        #         'Обязательное поле')
 
         return attrs
 
@@ -273,7 +273,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         following = attrs['following']
         if user == following:
             raise serializers.ValidationError(
-                'Нельзя подписаться на себя.')
+                {'error': 'Нельзя подписаться на себя.'})
         return attrs
 
     def to_representation(self, instance):
