@@ -157,7 +157,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         tags = attrs.get('tags')
         ingredients = attrs.get('ingredients')
-        # image = attrs.get('image')
+        image = attrs.get('image')
 
         if not ingredients:
             raise serializers.ValidationError(
@@ -172,9 +172,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         if len(double_ingredient) != len(ingredients):
             raise serializers.ValidationError(
                 {'ingredient': 'Дублирование ингредиентов'})
-        # if not image:
-        #     raise serializers.ValidationError(
-        #         'Обязательное поле')
+        if not image:
+            raise serializers.ValidationError(
+                'Обязательное поле')
 
         return attrs
 
@@ -194,6 +194,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        image = validated_data.pop('image', None) 
+        if image is not None:
+            instance.image = image
         tags = validated_data.pop('tags', None)
         if tags is not None:
             instance.tags.set(tags)

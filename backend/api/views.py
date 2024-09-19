@@ -212,7 +212,10 @@ class UserViewSet(CustomUser):
 class RecipeByShortCodeDetailView(RetrieveAPIView):
     """Вьюсет обработки короткой ссылки."""
 
-    queryset = Recipe.objects.all()
+    # queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
     lookup_field = 'url_link'
     lookup_url_kwarg = 'short_code'
+
+    def get_queryset(self):
+        return Recipe.objects.get(url_link=self.kwargs['short_code'])
