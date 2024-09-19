@@ -83,7 +83,7 @@ class RecipeViewSet(ModelViewSet):
     def get_link(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         url_link = (
-            f'https://foodgram-best.zapto.org/recipes/{recipe.url_link}')
+            f'https://foodgram-best.zapto.org/recipes/s/{recipe.url_link}')
         return JsonResponse({'short-link': url_link})
 
     @action(detail=True, methods=('post',),

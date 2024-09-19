@@ -36,13 +36,11 @@ class IngredientAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'image', 'url_link')
     list_display_links = ('id', 'name', 'author')
-    list_filter = (
-        'author',
-        'name',
-        'tags',
-    )
+    list_filter = ('author', 'name', 'tags')
     ordering = ('author',)
-    raw_id_fields = ('author',)
+
+    autocomplete_fields = ('author', 'tags', 'ingredients')
+
     inlines = (IngredientInline,)
 
 
