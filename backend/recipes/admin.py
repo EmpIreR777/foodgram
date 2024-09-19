@@ -42,7 +42,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags',
     )
     ordering = ('author',)
-    raw_id_fields = ('author', 'tags', 'ingredients')
+    raw_id_fields = ('author',)
     inlines = (IngredientInline,)
 
 

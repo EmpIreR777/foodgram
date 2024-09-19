@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet as CustomUser
+from djoser.views import UserViewSet as DjoserUserViewSet
 
 from .filters import RecipeFilter, IngredientSearchFilter
 from users.models import User
@@ -83,9 +83,7 @@ class RecipeViewSet(ModelViewSet):
     def get_link(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         url_link = (
-            f'https://foodgram-
-            best.zapto.org/recipes/s/{recipe.url_link}'
-        )
+            f'https://foodgram-best.zapto.org/recipes/s/{recipe.url_link}')
         return JsonResponse({'short-link': url_link})
 
     @action(detail=True, methods=('post',),
@@ -131,7 +129,7 @@ class TagViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-class UserViewSet(CustomUser):
+class UserViewSet(DjoserUserViewSet):
     """Вьюсет юзера urls = user/ me/ sub/ me/avatar/."""
 
     queryset = User.objects.all()
