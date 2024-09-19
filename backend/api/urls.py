@@ -10,7 +10,6 @@ from .views import (
     TagViewSet,
     RecipeViewSet,
     IngredientViewSet)
-    # RecipeByShortCodeDetailView)
 
 
 v1_router = DefaultRouter()
