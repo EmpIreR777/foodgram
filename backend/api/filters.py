@@ -12,14 +12,6 @@ class IngredientSearchFilter(SearchFilter):
         fields = ('name',)
 
 
-# class TagFilter(filters.AllValuesMultipleFilter):
-
-#     @property
-#     def field(self):
-#         self.extra["choices"] = [(o, o) for o in Tag.objects.values_list('slug', flat=True)]
-#         return super().field
-
-
 class RecipeFilter(FilterSet):
     is_favorited = filters.BooleanFilter(
         method='get_favorite_recipes')

@@ -292,11 +292,6 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return RecipeShopFavorSerializer(instance.recipe,
                                          context=self.context).data
-        
-    # def validate_recipe(self, attrs):
-    #     if not attrs:
-    #         raise serializers.ValidationError('
-    #                                           Рецепта не существует.')
 
 
 class ShoppingCartSerializer(BaseRecipeSerializer):
