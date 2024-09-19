@@ -42,9 +42,9 @@ python manage.py runserver
 ```
 
 ## Технологии:
-    *Python 3.10
-    *Django 5.0.6
-    *Django REST framework 3.15
+    *Python 3.9.20
+    *Django 4.2.7
+    *Django REST framework 3.15.2
     *Nginx
     *Docker
     *Postgres

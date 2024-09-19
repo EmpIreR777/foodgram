@@ -164,7 +164,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 {'ingredient': 'Поле отсутствует'})
         if not tags:
             raise serializers.ValidationError(
-                {'tags': 'Поле отсуствует'})
+                {'tags': 'Поле отсутствует'})
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
                 {'tags:': 'Теги не уникальны'})

@@ -29,18 +29,20 @@ class TagAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit')
     list_filter = ('name', 'measurement_unit')
-    search_fields = ('name',)
+    search_fields = ('slug',)
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'image', 'url_link')
     list_display_links = ('id', 'name', 'author')
-    list_filter = ('author', 'name', 'tags')
+    list_filter = (
+        'author',
+        'name',
+        'tags',
+    )
     ordering = ('author',)
-
-    autocomplete_fields = ('author', 'tags', 'ingredients')
-
+    raw_id_fields = ('author', 'tags', 'ingredients')
     inlines = (IngredientInline,)
 
 
