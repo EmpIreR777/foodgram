@@ -83,7 +83,7 @@ class RecipeViewSet(ModelViewSet):
     def get_link(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         url_link = (
-            f'https://foodgram-best.zapto.org/recipes/s/{recipe.url_link}')
+            f'https://foodgram-best.zapto.org/recipes/{recipe.url_link}')
         return JsonResponse({'short-link': url_link})
 
     @action(detail=True, methods=('post',),
@@ -213,7 +213,13 @@ class UserViewSet(DjoserUserViewSet):
 class RecipeByShortCodeDetailView(RetrieveAPIView):
     """Вьюсет обработки короткой ссылки."""
 
-    queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
     lookup_field = 'url_link'
     lookup_url_kwarg = 'short_code'
+
+    def get_queryset(self):
+        return Recipe.objects.all()
+
+    def get_object(self):
+        short_code = self.kwargs['short_code']
+        return get_object_or_404(Recipe, url_link=short_code)
