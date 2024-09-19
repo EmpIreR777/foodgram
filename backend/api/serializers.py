@@ -244,6 +244,10 @@ class SubscriptionsSerializer(UserSerializer):
 
     def get_recipes(self, obj):
         recipes = obj.recipes.all()
+        recipes_limit = self.context[
+            'request'].query_params.get('recipes_limit')
+        if recipes_limit and recipes_limit.isdigit():
+            recipes = recipes[:int(recipes_limit)]
         return RecipeShopFavorSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
@@ -285,18 +289,21 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
         model = None
         fields = ('user', 'recipe')
 
+    def to_representation(self, instance):
+        return RecipeShopFavorSerializer(instance.recipe,
+                                         context=self.context).data
+        
+    # def validate_recipe(self, attrs):
+    #     if not attrs:
+    #         raise serializers.ValidationError('
+    #                                           Рецепта не существует.')
+
 
 class ShoppingCartSerializer(BaseRecipeSerializer):
     """Сериализатор корзины."""
 
-    id = serializers.ReadOnlyField(source='recipe.id')
-    image = serializers.ReadOnlyField(source='recipe.image')
-    name = serializers.ReadOnlyField(source='recipe.name')
-    cooking_time = serializers.ReadOnlyField(source='recipe.cooking_time')
-
     class Meta(BaseRecipeSerializer.Meta):
         model = ShoppingCart
-        fields = ['id', 'image', 'name', 'cooking_time']
         validators = [
             UniqueTogetherValidator(
                 queryset=ShoppingCart.objects.all(),

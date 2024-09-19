@@ -51,21 +51,27 @@ class RecipeViewSet(ModelViewSet):
         return RecipeCreateUpdateSerializer
 
     @staticmethod
-    def add_method(serializer, request, pk):
-        serializer = serializer(data={
+    def add_method(serializer_cls, request, pk):
+        serializer = serializer_cls(data={
             'user': request.user.id, 'recipe': pk}, context={
                 'request': request})
         if not Recipe.objects.filter(id=pk).exists():
             return Response(data={
                 'error': 'Вы пытаетесь добавить несуществующий рецепт'},
-                status=status.HTTP_400_BAD_REQUEST)
+                status=status.HTTP_404_NOT_FOUND)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
     def delete_method(model, request, pk):
+        if not Recipe.objects.filter(id=pk).exists():
+            return Response(
+                data={
+                    'error': 'Вы пытаетесь удалить несуществующий рецепт'},
+                status=status.HTTP_404_NOT_FOUND
+            )
         del_item, item = model.objects.filter(
             user=request.user, recipe=pk).delete()
         if del_item:
@@ -147,17 +153,26 @@ class UserViewSet(CustomUser):
             )
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, id):
+        if not User.objects.filter(id=id).exists():
+            return Response(
+                data={
+                    'Вы пытаетесь удалить несуществующего подписчика',
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
         del_item, item = request.user.follower.filter(
             following=id).delete()
         if del_item:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response('Нет в добавленных.',
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=('get',),
             permission_classes=(IsAuthenticated,))
