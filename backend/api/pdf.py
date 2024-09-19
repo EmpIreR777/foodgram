@@ -45,7 +45,7 @@ def create_pdf(final_list, filename):
     p.setFont('Arial', 15)
     width, height = letter
     y = height - 40
-    p.drawString(30, y, 'Ingredients List')
+    p.drawString(30, y, 'Список ингредиентов:')
     y -= 20
     for ingredient_info in final_list:
         name = ingredient_info.name.capitalize()
