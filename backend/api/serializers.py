@@ -158,7 +158,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         tags = attrs.get('tags')
         ingredients = attrs.get('ingredients')
         image = attrs.get('image')
-
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredient': 'Поле отсутствует'})
@@ -175,7 +174,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         if not image:
             raise serializers.ValidationError(
                 {'image': 'Обязательное поле'})
-
         return attrs
 
     def create(self, validated_data):
@@ -184,7 +182,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         recipe = Recipe.objects.create(
             author=self.context['request'].user, **validated_data)
         recipe.tags.set(tags)
-
         RecipeIngredient.objects.bulk_create(
             RecipeIngredient(recipe=recipe,
                              ingredient=ingredient['id'],
@@ -194,6 +191,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        image = validated_data.pop('image', None)
+        if image is not None:
+            instance.image = image
         tags = validated_data.pop('tags', None)
         if tags is not None:
             instance.tags.set(tags)
