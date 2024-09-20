@@ -171,7 +171,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         if len(double_ingredient) != len(ingredients):
             raise serializers.ValidationError(
                 {'ingredient': 'Дублирование ингредиентов'})
-        if not image:
+        if image:
             raise serializers.ValidationError(
                 {'image': 'Обязательное поле'})
         return attrs
