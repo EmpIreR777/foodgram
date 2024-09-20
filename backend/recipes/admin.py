@@ -12,7 +12,7 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
 
 
 class IngredientInline(admin.StackedInline):
-    raw_id_fields = ('author',)
+    raw_id_fields = ('ingredients',)
     model = RecipeIngredient
     extra = 3
     min_num = 1
