@@ -146,7 +146,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(
         many=True,
     )
-    image = Base64ImageField(required=True)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
