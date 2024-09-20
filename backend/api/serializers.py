@@ -157,7 +157,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         tags = attrs.get('tags')
         ingredients = attrs.get('ingredients')
-        image = attrs.get('image')
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredient': 'Поле отсутствует'})
