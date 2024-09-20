@@ -12,6 +12,7 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
 
 
 class IngredientInline(admin.StackedInline):
+    raw_id_fields = ('author', 'ingredients')
     model = RecipeIngredient
     extra = 3
     min_num = 1
@@ -42,7 +43,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags',
     )
     ordering = ('author',)
-    raw_id_fields = ('author', 'tags', 'ingredients')
+    raw_id_fields = ('author', 'tags')
     inlines = (IngredientInline,)
 
 
