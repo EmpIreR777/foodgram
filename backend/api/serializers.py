@@ -159,7 +159,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         ingredients = attrs.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
-                {'ingredient': 'Поле отсутствует'})
+                {'ingredients': 'Поле отсутствует'})
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Поле отсутствует'})
@@ -169,7 +169,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         double_ingredient = {item['id'] for item in ingredients}
         if len(double_ingredient) != len(ingredients):
             raise serializers.ValidationError(
-                {'ingredient': 'Дублирование ингредиентов'})
+                {'ingredients': 'Дублирование ингредиентов'})
         return attrs
 
     def create(self, validated_data):
