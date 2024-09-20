@@ -107,7 +107,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(
         read_only=True)
-    image = Base64ImageField()
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Recipe
@@ -146,7 +146,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(
         many=True,
     )
-    image = Base64ImageField()
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Recipe
@@ -174,8 +174,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 {'ingredient': 'Дублирование ингредиентов'})
         if not image:
             raise serializers.ValidationError(
-                'Обязательное поле')
-
+                {'image': 'Обязательное поле'})
         return attrs
 
     def create(self, validated_data):
@@ -194,9 +193,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        image = validated_data.pop('image', None)
-        if image is not None:
-            instance.image = image
         tags = validated_data.pop('tags', None)
         if tags is not None:
             instance.tags.set(tags)
