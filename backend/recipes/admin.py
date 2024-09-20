@@ -7,12 +7,12 @@ from .models import (Tag, Ingredient, Recipe,
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
+    raw_id_fields = ('author', 'ingredients')
     list_display = ('recipe', 'ingredient', 'amount')
     list_filter = ('recipe', 'ingredient')
 
 
 class IngredientInline(admin.StackedInline):
-    raw_id_fields = ('author', 'ingredients')
     model = RecipeIngredient
     extra = 3
     min_num = 1
